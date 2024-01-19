@@ -1,18 +1,23 @@
+const amqp = require("amqplib");
+
 function connect() {
-  return require("amqplib")
+  return amqp
     .connect("amqp://localhost")
-    .then((conn) => conn.createChannel());
+    .then((conn) => conn.createChannel())
+    .catch((err) => {
+      console.error("Error connecting to RabbitMQ:", err);
+      throw err;
+    });
 }
 
 function createQueue(channel, queue) {
-  return new Promise((resolve, reject) => {
-    try {
-      channel.assertQueue(queue, { durable: true });
-      resolve(channel);
-    } catch (err) {
-      reject(err);
-    }
-  });
+  return channel
+    .assertQueue(queue, { durable: true })
+    .then(() => channel)
+    .catch((err) => {
+      console.error(`Error creating queue '${queue}':`, err);
+      throw err;
+    });
 }
 
 function sendToQueue(queue, message) {
@@ -21,14 +26,16 @@ function sendToQueue(queue, message) {
     .then((channel) =>
       channel.sendToQueue(queue, Buffer.from(JSON.stringify(message)))
     )
-    .catch((err) => console.log(err));
+    .catch((err) =>
+      console.error(`Error sending message to queue '${queue}':`, err)
+    );
 }
 
 function consume(queue, callback) {
   connect()
     .then((channel) => createQueue(channel, queue))
     .then((channel) => channel.consume(queue, callback, { noAck: true }))
-    .catch((err) => console.log(err));
+    .catch((err) => console.error(`Error consuming queue '${queue}':`, err));
 }
 
 module.exports = {

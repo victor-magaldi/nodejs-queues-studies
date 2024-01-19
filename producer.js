@@ -1,18 +1,22 @@
-//webapi.js
 const express = require("express");
 const app = express();
 const queue = require("./queue");
 
 app.use(express.json());
 
-const router = express.Router();
+app.post("/queue/task", (req, res) => {
+  const { body } = req;
 
-router.post("/task", (req, res) => {
-  queue.sendToQueue("fila1", req.body);
+  if (!body) {
+    return res.status(400).json({ error: "Request body is required" });
+  }
+
+  queue.sendToQueue("fila1", body);
+
   res.json({ message: "Your request will be processed!" });
 });
 
-app.use("/", router);
-app.listen(3000, () => {
-  console.log("Server Running");
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
 });

@@ -6,7 +6,9 @@
   "author": "Victor de Souza Magaldi <victmagaldi@hotmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "concurrently --kill-others \"nodemon producer.js\" \"nodemon consumer.js\""
+    "dev": "concurrently --kill-others \"nodemon producer.js\" \"nodemon consumer.js\"",
+    "consumer":"nodemon consumer.js",
+    "producer":"nodemon producer.js"
   },
   "dependencies": {
     "amqplib": "^0.10.3",

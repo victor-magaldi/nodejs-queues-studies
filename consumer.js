@@ -1,6 +1,16 @@
 const queue = require("./queue");
 
-queue.consume("fila1", (message) => {
-  //process the message
-  console.log("processing " + message.content.toString());
-});
+const processMessage = (message) => {
+  try {
+    const messageContent = message.content.toString();
+    console.log("Processing: " + messageContent);
+  } catch (error) {
+    console.error("Error processing message:", error);
+  }
+};
+
+const consumeQueue = (queueName) => {
+  queue.consume(queueName, processMessage);
+};
+
+consumeQueue("fila1");

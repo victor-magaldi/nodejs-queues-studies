@@ -1,6 +1,7 @@
 # nodejs-queues-studies
 
-##Setting up RabbitMQ on Linux
+## Setting up RabbitMQ on Linux
+
 Ensure that RabbitMQ is installed. On Ubuntu, you can install it using the following commands:
 
 ```bash
